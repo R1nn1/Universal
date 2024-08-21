@@ -1,0 +1,959 @@
+local ArrayField = loadstring(game:HttpGet("https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3AArrayfield%20Library"))()
+
+local Window = ArrayField:CreateWindow({
+    Name = "Rinns Hub Universal",
+    LoadingTitle = "Rinns Hub Universal",
+    LoadingSubtitle = "Code by Rinn Ui by Sirius Ui remake by Hosvile",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "RinnsHubConfigs",
+        FileName = "RinnsHub"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "Mt9F5nc8Tg",
+        RememberJoins = false
+    },
+    KeySystem = false,
+    KeySettings = {
+        Title = "ArrayField",
+        Subtitle = "Key System",
+        Note = "Join the discord (discord.gg/sirius)",
+        FileName = "ArrayFieldsKeys",
+        SaveKey = false,
+        GrabKeyFromSite = false,
+        Key = {"Hello", 'Bye'},
+        Actions = {
+            [1] = {
+                Text = 'Click here to copy the key link',
+                OnPress = function() end,
+            }
+        },
+    }
+})
+
+local Tab = Window:CreateTab("Main Tab", 4483362458)
+
+local spinEnabled = false
+getgenv().SpinSpeed = 40
+
+-- Spin Bot function
+local function updateSpin()
+    game:GetService('RunService').RenderStepped:Connect(function()
+        if spinEnabled then
+            local player = game:GetService('Players').LocalPlayer
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local rootPart = player.Character.HumanoidRootPart
+                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(getgenv().SpinSpeed), 0)
+            end
+        end
+    end)
+end
+
+-- Spin Bot toggle
+Tab:CreateToggle({
+    Name = "Spin Bot",
+    Info = {
+        Title = "Spin Bot",
+        Image = "12735851647",
+        Description = "Spins Your Character",
+    },
+    CurrentValue = false,
+    Flag = "SpinBotToggle",
+    Callback = function(Value)
+        spinEnabled = Value
+        if spinEnabled then
+            updateSpin()
+        end
+        print("Spin Bot:", spinEnabled and "Enabled" or "Disabled")
+    end,
+})
+
+-- Spin speed slider
+Tab:CreateSlider({
+    Name = "Spin Bot Speed",
+    Range = {1, 1000},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = getgenv().SpinSpeed,
+    Flag = "SpinSpeedSlider",
+    Callback = function(Value)
+        getgenv().SpinSpeed = Value
+        print("Spin Speed:", Value)
+    end,
+})
+
+-- Variables to store user inputs
+local codeToRun = ""
+local codeWaitTime = 1 -- Default to 1 second if nothing is provided
+local autoFarmRunning = false
+
+-- Function to start auto farm
+local function startAutoFarm()
+    while autoFarmRunning do
+        local success, err = pcall(function()
+            loadstring(codeToRun)()
+        end)
+        if not success then
+            warn("Error executing code: "..err)
+        end
+        wait(codeWaitTime)
+    end
+end
+
+local Label = Tab:CreateLabel("To Use The Auto Farm Maker Click the button below to open remote spy then copy the code you want it to run",Section)
+
+local Label = Tab:CreateLabel(" put the code you copied the Code to run then put the wait time before it runs the code again in the code wait time then toggle the start auto farm ",Section)
+
+Tab:CreateButton({
+    Name = "Open Remote Spy",
+    Info = {
+        Title = 'Open Remote Spy',
+        Description = 'Opens Remote Spy',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        -- Replace the print statement with your code
+        -- WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/RS/main/SimpleSpyMobile"))()
+    end,
+})
+
+Tab:CreateInput({
+    Name = "Code To Run",
+    PlaceholderText = "Code To Run",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        codeToRun = Text
+        print("Code to run set to:", codeToRun)
+    end,
+})
+
+Tab:CreateInput({
+    Name = "Code Wait Time",
+    PlaceholderText = "The Wait Time before running the code again (seconds)",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local waitTime = tonumber(Text)
+        if waitTime then
+            codeWaitTime = waitTime
+            print("Code wait time set to:", codeWaitTime)
+        else
+            warn("Invalid wait time, please enter a number.")
+        end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Start Auto Farm",
+    Info = {
+        Title = 'Start Auto Farm',
+        Image = '12735851647',
+        Description = 'Starts The Auto Farm or starts running the code basically',
+    },
+    CurrentValue = false,
+    Flag = "AutoFarmStarter",
+    Callback = function(Value)
+        autoFarmRunning = Value
+        print("Auto Farm running:", autoFarmRunning)
+        if autoFarmRunning then
+            startAutoFarm()
+        end
+    end,
+})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local FollowPlayerLoop = nil
+local CameraFollowLoop = nil
+
+-- Function to get the closest matching player
+local function GetPlayer(Name)
+    Name = Name:lower()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            if player.Name:lower():match("^" .. Name) then
+                return player
+            elseif player.DisplayName:lower():match("^" .. Name) then
+                return player
+            end
+        end
+    end
+    return nil
+end
+
+-- Teleport to Player Input
+Tab:CreateInput({
+    Name = "Teleport to player",
+    PlaceholderText = "Display name here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(inputText)
+        if inputText == "" then return end
+        
+        local targetPlayer = GetPlayer(inputText)
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+            end
+        else
+            print("No player found with a matching name or display name.")
+        end
+    end,
+})
+
+-- Follow Player Input
+Tab:CreateInput({
+    Name = "Follow Player",
+    PlaceholderText = "Display Name Here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(inputText)
+        if inputText == "" then return end
+        
+        if FollowPlayerLoop then
+            FollowPlayerLoop:Disconnect()
+        end
+
+        local targetPlayer = GetPlayer(inputText)
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local character = LocalPlayer.Character
+            local humanoid = character and character:FindFirstChild("Humanoid")
+
+            if humanoid then
+                FollowPlayerLoop = RunService.Heartbeat:Connect(function()
+                    if targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        humanoid:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+                    end
+                end)
+            else
+                print("No Humanoid found in your character.")
+            end
+        else
+            print("No player found with a matching name or display name.")
+        end
+    end,
+})
+
+-- Stop Following Button
+Tab:CreateButton({
+    Name = "Stop Following",
+    Info = {
+        Title = 'Stop Following',
+        Description = 'Click to stop following the player.',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        if FollowPlayerLoop then
+            FollowPlayerLoop:Disconnect()
+            FollowPlayerLoop = nil
+            print("Stopped following the player.")
+        else
+            print("No player is currently being followed.")
+        end
+    end,
+})
+
+-- Cam Follow Player Input
+Tab:CreateInput({
+    Name = "Cam Follow Player",
+    PlaceholderText = "Display Name Here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(inputText)
+        if inputText == "" then return end
+        
+        if CameraFollowLoop then
+            CameraFollowLoop:Disconnect()
+        end
+
+        local targetPlayer = GetPlayer(inputText)
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local camera = Workspace.CurrentCamera
+
+            CameraFollowLoop = RunService.RenderStepped:Connect(function()
+                if targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    camera.CFrame = CFrame.new(targetPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, 5, -10), targetPlayer.Character.HumanoidRootPart.Position)
+                end
+            end)
+        else
+            print("No player found with a matching name or display name.")
+        end
+    end,
+})
+
+-- Stop Cam Following Button
+Tab:CreateButton({
+    Name = "Stop Cam Following",
+    Info = {
+        Title = 'Stop Camera Following',
+        Description = 'Click to stop the camera from following the player.',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        if CameraFollowLoop then
+            CameraFollowLoop:Disconnect()
+            CameraFollowLoop = nil
+            print("Stopped camera from following the player.")
+        else
+            print("No camera follow action is currently active.")
+        end
+    end,
+})
+
+local VisualsTab = Window:CreateTab("Visuals Tab")
+local PvpTab = Window:CreateTab("PvP Tab")
+local MiscTab = Window:CreateTab("Misc Tab")
+local PlayerTab = Window:CreateTab("Players Tab")
+
+local WalkSpeedSlider = PlayerTab:CreateSlider({
+    Name = "WalkSpeed",
+    Range = {0, 10000},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "WalkSpeedSlider",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+        end
+    end,
+})
+
+local JumpPowerSlider = PlayerTab:CreateSlider({
+    Name = "JumpPower",
+    Range = {0, 10000},
+    Increment = 1,
+    Suffix = "Power",
+    CurrentValue = 32,
+    Flag = "JumpPowerSlider",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = Value
+        end
+    end,
+})
+
+local infiniteJumpEnabled = false
+
+local InfiniteJumpToggle = PlayerTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "InfiniteJumpToggle",
+    Callback = function(Value)
+        infiniteJumpEnabled = Value
+    end,
+})
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end
+    end
+end)
+
+local noClipEnabled = false
+
+local NoClipToggle = PlayerTab:CreateToggle({
+    Name = "No Clip",
+    CurrentValue = false,
+    Flag = "NoClipToggle",
+    Callback = function(Value)
+        noClipEnabled = Value
+    end,
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+    if noClipEnabled then
+        local player = game.Players.LocalPlayer
+        if player and player.Character then
+            for _, part in pairs(player.Character:GetDescendants()) do
+                if part:IsA("BasePart") and part.CanCollide then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+local espEnabled = false
+local espColor = Color3.new(1, 0, 0) -- Default ESP color is red
+
+local function createHighlight(player)
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = player.Character
+    highlight.FillColor = espColor
+    highlight.OutlineColor = espColor
+    return highlight
+end
+
+local function updateESP()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Character then
+            if espEnabled then
+                if not player.Character:FindFirstChildOfClass("Highlight") then
+                    createHighlight(player)
+                else
+                    local highlight = player.Character:FindFirstChildOfClass("Highlight")
+                    highlight.FillColor = espColor
+                    highlight.OutlineColor = espColor
+                end
+            else
+                for _, highlight in pairs(player.Character:GetChildren()) do
+                    if highlight:IsA("Highlight") then
+                        highlight:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+local ESPColorPicker = VisualsTab:CreateColorPicker({
+    Name = "Hightlights Esp Color",
+    Color = espColor,
+    Flag = "HighlightColorPicker",
+    Callback = function(Value)
+        espColor = Value
+        updateESP()
+    end,
+})
+
+local ESPToggle = VisualsTab:CreateToggle({
+    Name = "Hightlights Esp",
+    CurrentValue = false,
+    Flag = "HighlightToggle",
+    Callback = function(Value)
+        espEnabled = Value
+        updateESP()
+    end,
+})
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        if espEnabled then
+            createHighlight(player)
+        end
+    end)
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    if player.Character then
+        for _, highlight in pairs(player.Character:GetChildren()) do
+            if highlight:IsA("Highlight") then
+                highlight:Destroy()
+            end
+        end
+    end
+end)
+
+updateESP()
+
+MiscTab:CreateSpacing(nil, 10)
+
+local RejoinButton = MiscTab:CreateButton({
+    Name = "Rejoin Server",
+    Info = {
+        Title = 'Rejoin Server',
+        Description = 'Rejoins the Current Server You Are In',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    end,
+})
+
+local ServerHopButton = MiscTab:CreateButton({
+    Name = "Server Hop",
+    Info = {
+        Title = 'ServerHop',
+        Description = 'Joins A New Server For You',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        TeleportService:Teleport(game.PlaceId)
+    end,
+})
+
+local hitboxEnabled = false
+getgenv().HitboxSize = 15
+getgenv().HitboxTransparency = 0.3
+getgenv().HitboxColor = Color3.fromRGB(255, 255, 255) -- Default color
+
+-- Hitbox function
+local function updateHitbox()
+    game:GetService('RunService').RenderStepped:Connect(function()
+        if hitboxEnabled then
+            for _, v in next, game:GetService('Players'):GetPlayers() do
+                if v.Name ~= game:GetService('Players').LocalPlayer.Name and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                    pcall(function()
+                        v.Character.HumanoidRootPart.Size = Vector3.new(getgenv().HitboxSize, getgenv().HitboxSize, getgenv().HitboxSize)
+                        v.Character.HumanoidRootPart.Transparency = getgenv().HitboxTransparency
+                        v.Character.HumanoidRootPart.Color = getgenv().HitboxColor -- Apply the color
+                        v.Character.HumanoidRootPart.Material = "Neon"
+                        v.Character.HumanoidRootPart.CanCollide = false
+                    end)
+                end
+            end
+        else
+            for _, v in next, game:GetService('Players'):GetPlayers() do
+                if v.Name ~= game:GetService('Players').LocalPlayer.Name and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                    pcall(function()
+                        v.Character.HumanoidRootPart.Size = Vector3.new(2, 2, 1)
+                        v.Character.HumanoidRootPart.Transparency = 1
+                        v.Character.HumanoidRootPart.Color = Color3.fromRGB(163, 162, 165) -- Reset to default color
+                        v.Character.HumanoidRootPart.Material = "Plastic"
+                        v.Character.HumanoidRootPart.CanCollide = false
+                    end)
+                end
+            end
+        end
+    end)
+end
+
+-- Hitbox toggle
+PvpTab:CreateToggle({
+    Name = "Hitboxes",
+    Info = {
+        Title = "Hitboxes",
+        Image = "12735851647",
+        Description = "Changes The Hitboxes Of Other Players",
+    },
+    CurrentValue = false,
+    Flag = "HitboxToggle",
+    Callback = function(Value)
+        hitboxEnabled = Value
+        if hitboxEnabled then
+            updateHitbox()
+        end
+        print("Hitbox:", hitboxEnabled and "Enabled" or "Disabled")
+    end,
+})
+
+-- Hitbox size slider
+PvpTab:CreateSlider({
+    Name = "Hitbox Size",
+    Range = {1, 50},
+    Increment = 1,
+    Suffix = "Studs",
+    CurrentValue = getgenv().HitboxSize,
+    Flag = "HitboxSizeSlider",
+    Callback = function(Value)
+        getgenv().HitboxSize = Value
+        print("Hitbox Size:", Value)
+    end,
+})
+
+-- Hitbox transparency slider
+PvpTab:CreateSlider({
+    Name = "Hitbox Transparency",
+    Range = {0, 1},
+    Increment = 0.1,
+    Suffix = "",
+    CurrentValue = getgenv().HitboxTransparency,
+    Flag = "HitboxTransparencySlider",
+    Callback = function(Value)
+        getgenv().HitboxTransparency = Value
+        print("Hitbox Transparency:", Value)
+    end,
+})
+
+-- Hitbox color picker
+local ColorPicker = PvpTab:CreateColorPicker({
+    Name = "Hitbox Color",
+    Color = getgenv().HitboxColor,
+    Flag = "HitboxColorPicker",
+    Callback = function(Value)
+        getgenv().HitboxColor = Value
+        print("Hitbox Color:", Value)
+    end,
+})
+
+-- Aimbot settings
+local aimbotEnabled = false
+local wallCheckEnabled = false
+local aimbotFov = 175
+local fovTransparency = 0.4
+local fovThickness = 2
+local lockOnRange = 3000
+local fovCircle = nil
+local aimPart = "Head"
+local fovFollowMouse = false
+local players = game:GetService("Players")
+local camera = workspace.CurrentCamera
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local wishlistedUsers = {}
+local wishlistFriends = false
+local fovCircleColor = Color3.new(1, 1, 1)
+
+local function createFovCircle()
+    if fovCircle then fovCircle:Remove() end
+    fovCircle = Drawing.new("Circle")
+    fovCircle.Thickness = fovThickness
+    fovCircle.NumSides = 64
+    fovCircle.Radius = aimbotFov
+    fovCircle.Color = fovCircleColor
+    fovCircle.Transparency = fovTransparency
+    fovCircle.Visible = aimbotEnabled
+end
+
+local function updateFovCircle()
+    if fovCircle then
+        fovCircle.Position = fovFollowMouse and UserInputService:GetMouseLocation() or Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+        fovCircle.Radius = aimbotFov
+        fovCircle.Color = fovCircleColor
+        fovCircle.Transparency = fovTransparency
+        fovCircle.Thickness = fovThickness
+        fovCircle.Visible = aimbotEnabled
+    end
+end
+
+local function isPlayerVisible(target)
+    local origin = camera.CFrame.Position
+    local _, onScreen = camera:WorldToScreenPoint(target.Position)
+    if not onScreen then
+        return false
+    end
+
+    local ray = Ray.new(origin, (target.Position - origin).unit * lockOnRange)
+    local part, hitPosition = workspace:FindPartOnRayWithIgnoreList(ray, {camera, players.LocalPlayer.Character})
+    if part and part:IsDescendantOf(target.Parent) then
+        return true
+    end
+
+    return false
+end
+
+local function isUserWishlisted(username)
+    for _, user in pairs(wishlistedUsers) do
+        if string.find(string.lower(username), string.lower(user)) then
+            return true
+        end
+    end
+    return false
+end
+
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+
+    for _, player in pairs(players:GetPlayers()) do
+        if player ~= players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = player.Character.HumanoidRootPart
+            local humanoid = player.Character.Humanoid
+
+            if humanoid.Health > 0 and not isUserWishlisted(player.Name) then
+                local screenPoint = camera:WorldToScreenPoint(hrp.Position)
+                local distanceFromCenter = (Vector2.new(screenPoint.X, screenPoint.Y) - (fovFollowMouse and UserInputService:GetMouseLocation() or Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2))).Magnitude
+
+                if distanceFromCenter <= aimbotFov and (not wallCheckEnabled or isPlayerVisible(hrp)) then
+                    local distance = (hrp.Position - players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                    if distance < shortestDistance then
+                        shortestDistance = distance
+                        closestPlayer = player
+                    end
+                end
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+local function aimAtClosestPlayer()
+    if aimbotEnabled then
+        local closestPlayer = getClosestPlayer()
+        if closestPlayer and closestPlayer.Character and closestPlayer.Character:FindFirstChild(aimPart) then
+            local target = closestPlayer.Character[aimPart]
+            local targetPosition = target.Position
+            local currentCameraPosition = camera.CFrame.Position
+            local direction = (targetPosition - currentCameraPosition).unit
+            local targetCameraCFrame = CFrame.new(currentCameraPosition, currentCameraPosition + direction)
+            camera.CFrame = targetCameraCFrame
+        end
+    end
+end
+
+RunService.RenderStepped:Connect(function()
+    updateFovCircle()
+    aimAtClosestPlayer()
+end)
+
+-- Aimbot UI
+PvpTab:CreateToggle({
+    Name = "Aimbot",
+    Info = {
+        Title = 'Enable or Disable Aimbot',
+        Description = 'Dont feel like typing all that but remember Dont hold fire spam the fire button',
+    },
+    CurrentValue = aimbotEnabled,
+    Flag = "AimbotToggle",
+    Callback = function(Value)
+        aimbotEnabled = Value
+        updateFovCircle()
+    end,
+})
+
+PvpTab:CreateToggle({
+    Name = "Aimbot Wall Check",
+    Info = {
+        Title = 'Enable or Disable Wall Check',
+        Description = 'Checks If the person the aimbot is trying to lock on is behind a way and wont lock on to them',
+    },
+    CurrentValue = wallCheckEnabled,
+    Flag = "WallCheckToggle",
+    Callback = function(Value)
+        wallCheckEnabled = Value
+    end,
+})
+
+PvpTab:CreateToggle({
+    Name = "Aimbot Fov Follow Mouse",
+    Info = {
+        Title = 'Enable or Disable Aimbot Fov Follow Mouse',
+        Description = 'Makes It so the Aimbot Fov follows your Mouse Dont Use This For Mobile',
+    },
+    CurrentValue = fovFollowMouse,
+    Flag = "FovFollowMouseToggle",
+    Callback = function(Value)
+        fovFollowMouse = Value
+        updateFovCircle()
+    end,
+})
+
+Tab:CreateSpacing(nil,5)
+
+PvpTab:CreateSlider({
+    Name = "Aimbot Fov Size",
+    Info = {
+        Title = 'Change The Aimbot Fov Size',
+        Description = 'Lets you change the size of the aimbot Fov',
+    },
+    Range = {1, 1000},
+    Increment = 1,
+    Suffix = "Studs",
+    CurrentValue = aimbotFov,
+    Flag = "AimbotFovSlider",
+    Callback = function(Value)
+        aimbotFov = Value
+        updateFovCircle()
+    end,
+})
+
+PvpTab:CreateSlider({
+    Name = "Aimbot Fov Transparency",
+    Info = {
+        Title = 'Change The Aimbot Fov Transparency',
+        Description = 'Lets you change the transparency of the aimbot Fov',
+    },
+    Range = {0, 1},
+    Increment = 0.01,
+    Suffix = "",
+    CurrentValue = fovTransparency,
+    Flag = "AimbotFovTransparencySlider",
+    Callback = function(Value)
+        fovTransparency = Value
+        updateFovCircle()
+    end,
+})
+
+print("testing1")
+PvpTab:CreateSlider({
+    Name = "Aimbot Fov Thickness",
+    Info = {
+        Title = 'Change The Aimbot Fov Thickness',
+        Description = 'Lets you change the thickness of the aimbot Fov',
+    },
+    Range = {1, 10},
+    Increment = 0.01,
+    Suffix = "",
+    CurrentValue = fovThickness,
+    Flag = "AimbotFovThicknessSlider",
+    Callback = function(Value)
+        fovThickness = Value
+        updateFovCircle()
+    end,
+})
+
+print("testing2")
+
+PvpTab:CreateDropdown({
+    Name = "Aimbot Aim Part",
+    Info = {
+        Title = 'Change The Aimbot Aim Part',
+        Description = 'Lets you change the part of the target the aimbot aims at',
+    },
+    Options = {"Head", "Torso", "HumanoidRootPart"},
+    CurrentOption = aimPart,
+    Flag = "AimbotAimPartDropdown",
+    Callback = function(Value)
+        aimPart = Value
+    end,
+})
+
+PvpTab:CreateSlider({
+    Name = "Aimbot Lock On Range",
+    Info = {
+        Title = 'Change The Aimbot Lock On Range',
+        Description = 'Lets you change the range at which the aimbot locks on to targets',
+    },
+    Range = {100, 10000},
+    Increment = 1,
+    Suffix = "Studs",
+    CurrentValue = lockOnRange,
+    Flag = "AimbotLockOnRangeSlider",
+    Callback = function(Value)
+        lockOnRange = Value
+    end,
+})
+
+print("testing 3")
+
+PvpTab:CreateKeybind({
+    Name = "Aimbot Toggle Keybind",
+    CurrentKeybind = "Q",
+    HoldToInteract = false,
+    Flag = "AimbotKeybind",
+    Callback = function(Keybind)
+        aimbotEnabled = not aimbotEnabled
+        updateFovCircle()
+    end,
+})
+
+-- Initialize FOV circle
+createFovCircle()
+print("testing4")
+
+Tab:CreateSpacing(nil,10)
+
+PvpTab:CreateToggle({
+    Name = "Wishlist Friends",
+    Info = {
+        Title = 'Wishlist Friends',
+        Description = 'Toggle this on to wishlist friends.',
+    },
+    CurrentValue = wishlistFriends,
+    Flag = "WishlistFriendsToggle",
+    Callback = function(Value)
+        wishlistFriends = Value
+        if wishlistFriends then
+            wishlistedUsers = {}
+            local success, result = pcall(function()
+                return players:GetFriendsAsync(players.LocalPlayer.UserId)
+            end)
+            if success then
+                for _, friend in pairs(result) do
+                    for _, player in pairs(players:GetPlayers()) do
+                        if player.Name == friend.Username then
+                            table.insert(wishlistedUsers, friend.Username)
+                        end
+                    end
+                end
+            else
+                print("Error fetching friends:", result)
+            end
+        end
+    end,
+})
+
+PvpTab:CreateButton({
+    Name = "Clear Wishlist",
+    Info = {
+        Title = 'Clear Wishlist',
+        Description = 'Clears all users from the wishlist.',
+    },
+    Callback = function()
+        wishlistedUsers = {}
+    end,
+})
+
+-- Function to find the closest match for a username
+local function findClosestUsername(input)
+    local closestUsername = nil
+    local closestDistance = math.huge
+
+    for _, player in pairs(players:GetPlayers()) do
+        local lowerInput = string.lower(input)
+        local lowerName = string.lower(player.Name)
+        local _, matches = string.gsub(lowerName, lowerInput, "")
+        local distance = #lowerInput + #lowerName - 2 * matches
+        if matches > 0 and distance < closestDistance then
+            closestDistance = distance
+            closestUsername = player.Name
+        end
+    end
+
+    return closestUsername
+end
+
+-- Update wishlist to store closest matching usernames
+PvpTab:CreateInput({
+    Name = "Wishlist Users",
+    PlaceholderText = "Put UserNames to wishlist Here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        wishlistedUsers = {}
+        local userInput = string.split(Text, ",")
+        for _, user in pairs(userInput) do
+            user = user:match("^%s*(.-)%s*$") -- trim whitespace
+            if user ~= "" then
+                local closestMatch = findClosestUsername(user)
+                if closestMatch then
+                    table.insert(wishlistedUsers, closestMatch)
+                end
+            end
+        end
+    end,
+})
+
+function reduceLag()
+    -- Lower rendering quality level
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    
+    -- Terrain settings
+    Workspace.Terrain.WaterWaveSize = 0
+    Workspace.Terrain.WaterWaveSpeed = 0
+    Workspace.Terrain.WaterReflectance = 0
+    Workspace.Terrain.WaterTransparency = 0
+    
+    -- Adjusting properties of parts
+    for _, v in pairs(Workspace:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("WedgePart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+            v.CastShadow = false  -- Disable shadows
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Enabled = false  -- Disable particle emitters
+        end
+    end
+    
+    -- Lower graphics settings
+    game.Lighting.GlobalShadows = false
+    game.Lighting.FogEnd = 100000  -- Max fog distance
+    
+    -- Reduce render distance
+    game.Players.LocalPlayer.CameraMaxZoomDistance = 50  -- Example value, adjust as needed
+    
+    print('Lag')
+end
+
+-- Button setup
+MiscTab:CreateButton({
+    Name = "Reduce Lag",
+    Info = {
+        Title = 'Less Lag',
+        Description = 'reduces lag in the game.',
+    },
+    Interact = 'Changable',
+    Callback = function()
+        reduceLag()
+    end,
+})
+
+MiscTab:CreateSpacing(nil, 10)
