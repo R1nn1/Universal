@@ -1078,3 +1078,46 @@ PlayerTab:CreateSlider({
         print("Spin Speed:", Value)
     end,
 })
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local walkOnWallsEnabled = false
+
+-- Toggle for Walk on Walls
+PlayerTab:CreateToggle({
+    Name = "Walk on Walls",
+    Info = {
+        Title = 'Walk on Walls',
+        Image = '12735851647',
+        Description = 'Walk on walls like normal ground.',
+    },
+    CurrentValue = false,
+    Flag = "Toggle2",
+    Callback = function(Value)
+        walkOnWallsEnabled = Value
+        print("Walk on Walls:", Value)
+        if walkOnWallsEnabled then
+            humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+        else
+            humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+        end
+    end,
+})
+
+-- Function to enable walking on walls
+local function modifyWallWalking()
+    if walkOnWallsEnabled then
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics, true)  -- Allow wall walking
+        humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+    else
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics, false) -- Disable wall walking
+        humanoid:ChangeState(Enum.HumanoidStateType.Running)
+    end
+end
+
+-- Keep monitoring the state of the toggle
+game:GetService("RunService").Stepped:Connect(function()
+    if walkOnWallsEnabled then
+        modifyWallWalking()
+    end
+end)
