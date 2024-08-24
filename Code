@@ -1041,3 +1041,41 @@ MiscTab:CreateButton({
 })
 
 MiscTab:CreateSpacing(nil, 10)
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+local clickTeleportEnabled = false
+
+-- Toggle for Click Teleport
+PlayerTab:CreateToggle({
+    Name = "Click Teleport",
+    Info = {
+        Title = 'Click Teleport',
+        Image = '12735851647',
+        Description = 'Teleports you to wherever you click',
+    },
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        clickTeleportEnabled = Value
+        print("Click Teleport:", Value)
+    end,
+})
+
+-- Function to teleport player on click
+local function teleportToClick()
+    if clickTeleportEnabled then
+        local targetPos = mouse.Hit.p -- Get the position where the mouse clicked
+        player.Character:MoveTo(targetPos) -- Teleport player's character to the target position
+    end
+end
+
+-- Detect mouse clicks
+UserInputService.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then -- Left-click
+        teleportToClick()
+    end
+end)
+
