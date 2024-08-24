@@ -1010,11 +1010,11 @@ local function enableClickTeleportFunction()
 end
 
 PlayerTab:CreateToggle({
-    Name = "Enable Click Teleport",
+    Name = "Click Teleport",
     Info = {
-        Title = 'Enable Click Teleport',
+        Title = 'Click Teleport',
         Image = '12735851647',
-        Description = 'Enables the Click Teleport action',
+        Description = 'Teleports You Whereever you click',
     },
     CurrentValue = false,
     Flag = "EnableClickTeleport", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
