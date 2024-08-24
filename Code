@@ -51,7 +51,7 @@ local function updateSpin()
 end
 
 -- Spin Bot toggle
-Tab:CreateToggle({
+PlayerTab:CreateToggle({
     Name = "Spin Bot",
     Info = {
         Title = "Spin Bot",
@@ -70,7 +70,7 @@ Tab:CreateToggle({
 })
 
 -- Spin speed slider
-Tab:CreateSlider({
+PlayerTab:CreateSlider({
     Name = "Spin Bot Speed",
     Range = {1, 1000},
     Increment = 1,
