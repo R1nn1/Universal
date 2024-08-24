@@ -34,55 +34,6 @@ local Window = ArrayField:CreateWindow({
 
 local Tab = Window:CreateTab("Main Tab", 4483362458)
 
-local spinEnabled = false
-getgenv().SpinSpeed = 40
-
--- Spin Bot function
-local function updateSpin()
-    game:GetService('RunService').RenderStepped:Connect(function()
-        if spinEnabled then
-            local player = game:GetService('Players').LocalPlayer
-            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                local rootPart = player.Character.HumanoidRootPart
-                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(getgenv().SpinSpeed), 0)
-            end
-        end
-    end)
-end
-
--- Spin Bot toggle
-PlayerTab:CreateToggle({
-    Name = "Spin Bot",
-    Info = {
-        Title = "Spin Bot",
-        Image = "12735851647",
-        Description = "Spins Your Character",
-    },
-    CurrentValue = false,
-    Flag = "SpinBotToggle",
-    Callback = function(Value)
-        spinEnabled = Value
-        if spinEnabled then
-            updateSpin()
-        end
-        print("Spin Bot:", spinEnabled and "Enabled" or "Disabled")
-    end,
-})
-
--- Spin speed slider
-PlayerTab:CreateSlider({
-    Name = "Spin Bot Speed",
-    Range = {1, 1000},
-    Increment = 1,
-    Suffix = "Speed",
-    CurrentValue = getgenv().SpinSpeed,
-    Flag = "SpinSpeedSlider",
-    Callback = function(Value)
-        getgenv().SpinSpeed = Value
-        print("Spin Speed:", Value)
-    end,
-})
-
 -- Variables to store user inputs
 local codeToRun = ""
 local codeWaitTime = 1 -- Default to 1 second if nothing is provided
@@ -1079,3 +1030,51 @@ UserInputService.InputBegan:Connect(function(input)
     end
 end)
 
+local spinEnabled = false
+getgenv().SpinSpeed = 40
+
+-- Spin Bot function
+local function updateSpin()
+    game:GetService('RunService').RenderStepped:Connect(function()
+        if spinEnabled then
+            local player = game:GetService('Players').LocalPlayer
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local rootPart = player.Character.HumanoidRootPart
+                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(getgenv().SpinSpeed), 0)
+            end
+        end
+    end)
+end
+
+-- Spin Bot toggle
+PlayerTab:CreateToggle({
+    Name = "Spin Bot",
+    Info = {
+        Title = "Spin Bot",
+        Image = "12735851647",
+        Description = "Spins Your Character",
+    },
+    CurrentValue = false,
+    Flag = "SpinBotToggle",
+    Callback = function(Value)
+        spinEnabled = Value
+        if spinEnabled then
+            updateSpin()
+        end
+        print("Spin Bot:", spinEnabled and "Enabled" or "Disabled")
+    end,
+})
+
+-- Spin speed slider
+PlayerTab:CreateSlider({
+    Name = "Spin Bot Speed",
+    Range = {1, 1000},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = getgenv().SpinSpeed,
+    Flag = "SpinSpeedSlider",
+    Callback = function(Value)
+        getgenv().SpinSpeed = Value
+        print("Spin Speed:", Value)
+    end,
+})
