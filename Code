@@ -1118,3 +1118,221 @@ game:GetService("RunService").Stepped:Connect(function()
         modifyWallWalking()
     end
 end)
+
+local WorldTab = Window:CreateTab("World Tab", 4483362458) -- Title, Image
+
+-- Function to remove all RinnsHub effects
+local function removeRinnsHubEffects()
+    for _, child in pairs(game:GetService("Lighting"):GetChildren()) do
+        if child.Name:match("^RinnsHub") then
+            child:Destroy()
+        end
+    end
+end
+
+-- Function to add low RTX effects
+local function enableLowRTX()
+    local Lighting = game:GetService("Lighting")
+
+    -- Bloom
+    local bloom = Instance.new("BloomEffect")
+    bloom.Intensity = 0.3
+    bloom.Threshold = 1.5
+    bloom.Size = 12
+    bloom.Name = "RinnsHubBloom"
+    bloom.Parent = Lighting
+    
+    -- Depth of Field
+    local dof = Instance.new("DepthOfFieldEffect")
+    dof.FarIntensity = 0.1
+    dof.FocusDistance = 50
+    dof.InFocusRadius = 100
+    dof.NearIntensity = 0.6
+    dof.Name = "RinnsHubDoF"
+    dof.Parent = Lighting
+
+    -- Color Correction
+    local colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Brightness = 0.05
+    colorCorrection.Contrast = 0.2
+    colorCorrection.Saturation = 0.2
+    colorCorrection.TintColor = Color3.fromRGB(255, 245, 230)
+    colorCorrection.Name = "RinnsHubColorCorrection"
+    colorCorrection.Parent = Lighting
+
+    -- Fog
+    Lighting.FogEnd = 600
+    Lighting.FogStart = 300
+    Lighting.FogColor = Color3.fromRGB(170, 170, 210)
+    Lighting.Name = "RinnsHubFog"
+
+    -- Shadows
+    Lighting.GlobalShadows = true
+    Lighting.EnvironmentDiffuseScale = 0.5
+    Lighting.EnvironmentSpecularScale = 0.5
+end
+
+-- Function to add medium RTX effects
+local function enableMediumRTX()
+    local Lighting = game:GetService("Lighting")
+    
+    -- Bloom
+    local bloom = Instance.new("BloomEffect")
+    bloom.Intensity = 0.8
+    bloom.Threshold = 1.2
+    bloom.Size = 18
+    bloom.Name = "RinnsHubBloom"
+    bloom.Parent = Lighting
+
+    -- Depth of Field
+    local dof = Instance.new("DepthOfFieldEffect")
+    dof.FarIntensity = 0.2
+    dof.FocusDistance = 75
+    dof.InFocusRadius = 200
+    dof.NearIntensity = 0.4
+    dof.Name = "RinnsHubDoF"
+    dof.Parent = Lighting
+
+    -- Color Correction
+    local colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Brightness = 0.1
+    colorCorrection.Contrast = 0.4
+    colorCorrection.Saturation = 0.4
+    colorCorrection.TintColor = Color3.fromRGB(255, 240, 220)
+    colorCorrection.Name = "RinnsHubColorCorrection"
+    colorCorrection.Parent = Lighting
+
+    -- Fog
+    Lighting.FogEnd = 900
+    Lighting.FogStart = 450
+    Lighting.FogColor = Color3.fromRGB(160, 160, 200)
+    Lighting.Name = "RinnsHubFog"
+
+    -- Shadows
+    Lighting.GlobalShadows = true
+    Lighting.EnvironmentDiffuseScale = 0.8
+    Lighting.EnvironmentSpecularScale = 0.8
+
+    -- Blur
+    local blur = Instance.new("BlurEffect")
+    blur.Size = 3
+    blur.Name = "RinnsHubBlur"
+    blur.Parent = Lighting
+end
+
+-- Function to add high RTX effects
+local function enableHighRTX()
+    local Lighting = game:GetService("Lighting")
+    
+    -- Bloom
+    local bloom = Instance.new("BloomEffect")
+    bloom.Intensity = 1.2
+    bloom.Threshold = 1
+    bloom.Size = 24
+    bloom.Name = "RinnsHubBloom"
+    bloom.Parent = Lighting
+    
+    -- Depth of Field
+    local dof = Instance.new("DepthOfFieldEffect")
+    dof.FarIntensity = 0.4
+    dof.FocusDistance = 100
+    dof.InFocusRadius = 300
+    dof.NearIntensity = 0.3
+    dof.Name = "RinnsHubDoF"
+    dof.Parent = Lighting
+    
+    -- Color Correction
+    local colorCorrection = Instance.new("ColorCorrectionEffect")
+    colorCorrection.Brightness = 0.2
+    colorCorrection.Contrast = 0.6
+    colorCorrection.Saturation = 0.5
+    colorCorrection.TintColor = Color3.fromRGB(255, 235, 210)
+    colorCorrection.Name = "RinnsHubColorCorrection"
+    colorCorrection.Parent = Lighting
+    
+    -- Fog
+    Lighting.FogEnd = 1200
+    Lighting.FogStart = 600
+    Lighting.FogColor = Color3.fromRGB(150, 150, 190)
+    Lighting.Name = "RinnsHubFog"
+    
+    -- Shadows
+    Lighting.GlobalShadows = true
+    Lighting.EnvironmentDiffuseScale = 1
+    Lighting.EnvironmentSpecularScale = 1
+
+    -- Blur
+    local blur = Instance.new("BlurEffect")
+    blur.Size = 5
+    blur.Name = "RinnsHubBlur"
+    blur.Parent = Lighting
+
+    -- Sun Rays
+    local sunRays = Instance.new("SunRaysEffect")
+    sunRays.Intensity = 0.2
+    sunRays.Spread = 0.8
+    sunRays.Name = "RinnsHubSunRays"
+    sunRays.Parent = Lighting
+
+    -- Motion Blur
+    local motionBlur = Instance.new("BlurEffect")
+    motionBlur.Size = 3
+    motionBlur.Name = "RinnsHubMotionBlur"
+    motionBlur.Parent = Lighting
+end
+
+-- Create the toggles
+WorldTab:CreateToggle({
+    Name = "Enable Low RTX Graphics",
+    Info = {
+        Title = 'Low RTX Graphics',
+        Image = '12735851647',
+        Description = 'Enables low RTX-like graphics',
+    },
+    CurrentValue = false,
+    Flag = "LowRTX", 
+    Callback = function(Value)
+        if Value then
+            enableLowRTX()
+        else
+            removeRinnsHubEffects()
+        end
+    end,
+})
+
+WorldTab:CreateToggle({
+    Name = "Enable Medium RTX Graphics",
+    Info = {
+        Title = 'Medium RTX Graphics',
+        Image = '12735851647',
+        Description = 'Enables medium RTX-like graphics',
+    },
+    CurrentValue = false,
+    Flag = "MediumRTX", 
+    Callback = function(Value)
+        if Value then
+            enableMediumRTX()
+        else
+            removeRinnsHubEffects()
+        end
+    end,
+})
+
+WorldTab:CreateToggle({
+    Name = "Enable High RTX Graphics",
+    Info = {
+        Title = 'High RTX Graphics',
+        Image = '12735851647',
+        Description = 'Enables high RTX-like graphics',
+    },
+    CurrentValue = false,
+    Flag = "HighRTX", 
+    Callback = function(Value)
+        if Value then
+            enableHighRTX()
+        else
+            removeRinnsHubEffects()
+        end
+    end,
+})
+
