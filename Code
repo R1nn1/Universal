@@ -993,42 +993,39 @@ MiscTab:CreateButton({
 
 MiscTab:CreateSpacing(nil, 10)
 
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
-local clickTeleportEnabled = false
+local enableClickTeleport = false
+local function enableClickTeleportFunction()
+    local player = game:GetService("Players").LocalPlayer
+    local mouse = player:GetMouse()
+    
+    mouse.Button1Down:Connect(function()
+        if enableClickTeleport then
+            local character = player.Character or player.CharacterAdded:Wait()
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(mouse.Hit.p + Vector3.new(0, 3, 0))
+            end
+        end
+    end)
+end
 
--- Toggle for Click Teleport
 PlayerTab:CreateToggle({
-    Name = "Click Teleport",
+    Name = "Enable Click Teleport",
     Info = {
-        Title = 'Click Teleport',
+        Title = 'Enable Click Teleport',
         Image = '12735851647',
-        Description = 'Teleports you to wherever you click',
+        Description = 'Enables the Click Teleport action',
     },
     CurrentValue = false,
-    Flag = "Toggle1",
+    Flag = "EnableClickTeleport", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
     Callback = function(Value)
-        clickTeleportEnabled = Value
-        print("Click Teleport:", Value)
+        enableClickTeleport = Value
+        if enableClickTeleport then
+            enableClickTeleportFunction()
+        end
     end,
 })
 
--- Function to teleport player on click
-local function teleportToClick()
-    if clickTeleportEnabled then
-        local targetPos = mouse.Hit.p -- Get the position where the mouse clicked
-        player.Character:MoveTo(targetPos) -- Teleport player's character to the target position
-    end
-end
-
--- Detect mouse clicks
-UserInputService.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then -- Left-click
-        teleportToClick()
-    end
-end)
 
 local spinEnabled = false
 getgenv().SpinSpeed = 40
@@ -1092,7 +1089,7 @@ PlayerTab:CreateToggle({
         Description = 'Walk on walls like normal ground.',
     },
     CurrentValue = false,
-    Flag = "Toggle2",
+    Flag = "WalkOnWalls",
     Callback = function(Value)
         walkOnWallsEnabled = Value
         print("Walk on Walls:", Value)
